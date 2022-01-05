@@ -1,11 +1,38 @@
-﻿using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
+﻿public record MapObject(int X, int Y)
+{
+    public static MapObject Parse(string line)
+    {
+        var inputs = line.Split(' ');
+        var x = int.Parse(inputs[0]);
+        var y = int.Parse(inputs[1]);
 
-class Player
+        return new(x, y);
+    }
+}
+
+public class Map
+{
+    public readonly IReadOnlyList<string> Grid;
+
+    public Map(IReadOnlyList<string> grid)
+    {
+        Grid = grid;
+    }
+
+    public bool IsFree(int x, int y)
+    {
+        if (0 > y || y >= Grid.Count) return false;
+        var line = Grid[y];
+        if (0 > x || x >= line.Length) return false;
+        return line[x] != '#';
+    }
+
+    public int GetScore(IEnumerable<MapObject> boxes)
+    {
+    }
+}
+
+internal static class Player
 {
     static void Main(string[] args)
     {
@@ -15,26 +42,25 @@ class Player
         var height = int.Parse(inputs[1]);
         var boxCount = int.Parse(inputs[2]);
 
-        var map = new string[height];
-        
+        var lines = new string[height];
+
         for (var i = 0; i < height; i++)
         {
             var line = Console.ReadLine();
-            map[i] = line!;
+            lines[i] = line!;
             Console.Error.WriteLine(line);
         }
+
+        var map = new Map(lines);
 
         // game loop
         while (true)
         {
-            inputs = Console.ReadLine().Split(' ');
-            var pusherX = int.Parse(inputs[0]);
-            var pusherY = int.Parse(inputs[1]);
+            var pusher = MapObject.Parse(Console.ReadLine());
+
             for (var i = 0; i < boxCount; i++)
             {
-                inputs = Console.ReadLine().Split(' ');
-                var boxX = int.Parse(inputs[0]);
-                var boxY = int.Parse(inputs[1]);
+                var box = MapObject.Parse(Console.ReadLine());
             }
 
             Console.WriteLine("U");
